@@ -1,0 +1,40 @@
+{
+  "capabilities": [
+    {
+      "Anycubic Kobra X (kobracontrol)": true
+    },
+    {
+      "Kobra Control": true
+    },
+    {
+      "Check Kobra X connection": true
+    },
+    {
+      "Find Anycubic certificate": true
+    }
+  ],
+  "cloud_uuid": "5d572581-28dc-4c72-a044-36a3d26f7982",
+  "enabled": true,
+  "installed_from": "cloud",
+  "installed_version": "0.2.0",
+  "permissions": {
+    "events": [],
+    "fs_read": [
+      "/opt/AnycubicSlicerNext/*",
+      "/usr/lib/AnycubicSlicerNext/*",
+      "/usr/share/AnycubicSlicerNext/*",
+      "/home/user/AnycubicSlicerNext/*",
+      "/home/user/.local/share/AnycubicSlicerNext/*",
+      "/tmp/orcaslicer_1000/*"
+    ],
+    "fs_readwrite": [],
+    "full_access": false,
+    "network_http": [
+      "http://192.0.2.10"
+    ],
+    "network_socket": [],
+    "process": [],
+    "threading": true
+  },
+  "plugin_name": "kobracontrol"
+}

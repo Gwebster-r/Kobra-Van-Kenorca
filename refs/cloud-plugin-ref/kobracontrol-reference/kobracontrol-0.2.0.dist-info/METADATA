@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: kobracontrol
+Version: 0.2.0
+Summary: Anycubic Kobra X control for OrcaSlicer: direct LAN printing through a printer agent, Device tab status, ACE slots, camera, files and Spoolman.
+Author: bloodf
+License: GPL-3.0-only
+Requires-Python: >=3.12

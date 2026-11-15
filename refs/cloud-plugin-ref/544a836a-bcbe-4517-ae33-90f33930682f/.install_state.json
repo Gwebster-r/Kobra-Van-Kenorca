@@ -1,0 +1,36 @@
+{
+  "capabilities": [
+    {
+      "U1 Control": true
+    },
+    {
+      "U1 print setup": true
+    },
+    {
+      "Check U1 connection": true
+    },
+    {
+      "Sync U1 toolheads to project filaments": true
+    },
+    {
+      "Apply Snapmaker Orca U1 process tuning": true
+    }
+  ],
+  "cloud_uuid": "544a836a-bcbe-4517-ae33-90f33930682f",
+  "enabled": true,
+  "installed_from": "cloud",
+  "installed_version": "0.8.0",
+  "permissions": {
+    "events": [],
+    "fs_read": [],
+    "fs_readwrite": [
+      "/home/user/Downloads/u1control"
+    ],
+    "full_access": false,
+    "network_http": [],
+    "network_socket": [],
+    "process": [],
+    "threading": true
+  },
+  "plugin_name": "u1control"
+}

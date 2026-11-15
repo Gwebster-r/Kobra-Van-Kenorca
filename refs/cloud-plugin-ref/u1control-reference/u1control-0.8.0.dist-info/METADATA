@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: u1control
+Version: 0.8.0
+Summary: Snapmaker U1 control for OrcaSlicer: print setup with toolhead mapping, camera, toolheads & filament, Spoolman, file manager, Extended Firmware config and Snapmaker Orca fixes.
+Author: bloodf
+License: GPL-3.0-only
+Requires-Python: >=3.12

@@ -1,0 +1,28 @@
+{
+  "capabilities": [
+    {
+      "Open SnapSend": true
+    },
+    {
+      "SnapSend — Upload & Print": true
+    },
+    {
+      "SnapSend Settings": true
+    }
+  ],
+  "cloud_uuid": "5dff8d2e-7860-49f3-9ca7-62f7fffbc31e",
+  "enabled": true,
+  "installed_from": "cloud",
+  "installed_version": "0.12.43",
+  "permissions": {
+    "events": [],
+    "fs_read": [],
+    "fs_readwrite": [],
+    "full_access": false,
+    "network_http": [],
+    "network_socket": [],
+    "process": [],
+    "threading": true
+  },
+  "plugin_name": "SnapSend"
+}

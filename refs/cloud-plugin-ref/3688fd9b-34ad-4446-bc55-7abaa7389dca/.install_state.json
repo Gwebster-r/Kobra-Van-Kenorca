@@ -1,0 +1,22 @@
+{
+  "capabilities": [
+    {
+      "BumpMesh Textures by xcaliburr101": true
+    }
+  ],
+  "cloud_uuid": "3688fd9b-34ad-4446-bc55-7abaa7389dca",
+  "enabled": true,
+  "installed_from": "cloud",
+  "installed_version": "1.0.0",
+  "permissions": {
+    "events": [],
+    "fs_read": [],
+    "fs_readwrite": [],
+    "full_access": false,
+    "network_http": [],
+    "network_socket": [],
+    "process": [],
+    "threading": false
+  },
+  "plugin_name": "rt"
+}
