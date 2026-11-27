@@ -11177,6 +11177,9 @@ print(JSON.stringify({
                             {"tool": 3, "status": "ready", "material": "PLA", "color": [255, 0, 0]},
                         ],
                     },
+                    "ace_state": {
+                        "endless_spool_next_tool": 2,
+                    },
                     "save_variables": {
                         "variables": {
                             "ace_current_index": 0,
@@ -11193,6 +11196,7 @@ print(JSON.stringify({
             st_live = client.query_ace_status()
         self.assertTrue(st_live["endless_spool_enabled"])
         self.assertEqual(st_live["endless_spool_mode"], "material")
+        self.assertEqual(st_live["endless_spool_next_tool"], 2)
 
         slots = st_live["slots"]
         # Exact: skips empty T1 and green PLA T2, picks red PLA T3

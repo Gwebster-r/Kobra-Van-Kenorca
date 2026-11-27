@@ -849,12 +849,28 @@ TRANSLATIONS: Dict[str, Dict[str, str]] = {
         "ui.modal.card.backup_badge": "↻ Backup: {slots}",
         "ui.modal.card.backup_none": "↻ No Backup",
         "ui.modal.card.backup_tip": "Likely backup ({mode}): {slots} ({mat}{rem}) will probably take over on runout (estimated by ACEPRO rules)",
+        "ui.modal.card.backup_tip_driver": "Driver-confirmed backup ({mode}): {slots} ({mat}{rem}) reported by ACEPRO ace_state.endless_spool_next_tool",
         "ui.modal.card.backup_short_tip": "Likely backup ({mode}): {slots} ({mat}{rem}) — still {still_short} g short to finish the print",
         "ui.modal.card.backup_none_tip": "Endless Spool ({mode}): No matching ready backup spool found",
         "ui.modal.pred.backup_ok": "Short by {deficit} g — likely backup {slots} ({avail} g left) is enough to finish the print.",
         "ui.modal.pred.backup_short": "Short by {deficit} g — likely backup {slots} ({avail} g left) is also not enough ({still_short} g still short).",
         "ui.modal.pred.backup_unknown": "Short by {deficit} g — likely backup {slots} (remaining weight unknown).",
         "ui.modal.pred.backup_none": "Short by {deficit} g — no matching ready backup spool found ({mode}).",
+        "ui.nav.guide": "Guide",
+        "ui.nav.guide_tip": "Open Quick-Start Guide & FAQ",
+        "ui.settings.tab_guide": "Guide",
+        "ui.guide.intro": "Quick overview of Kobra-Van-Kenorca. Full guide with details on GitHub:",
+        "ui.guide.github_link": "Open full USER_GUIDE.md on GitHub",
+        "ui.guide.s1_title": "1. Quick Start (3 Steps)",
+        "ui.guide.s1_body": "1) Enter your printer's Moonraker URL under Settings → Connection and click Connect. 2) Slice your model in OrcaSlicer Preview. 3) Click Print — Map · Check · Send opens automatically so you can verify slots, materials, and purge before uploading.",
+        "ui.guide.s2_title": "2. Slot Bay, Auto-Feed, ACE Power & Safety Lock",
+        "ui.guide.s2_body": "Load/Unload/Full Unload operate ACE Pro slots (stay at the printer during Full Unload so the spool does not tangle). Auto-Feed toggles ACE feed assist (green = ON). The ⏻ button toggles Klipper's ACE_Pro pin (ACE vs. External Spool). During an active print, hardware buttons lock automatically — click Unlock in the orange status tile only if you need manual intervention.",
+        "ui.guide.s3_title": "3. Map · Check · Send & Spoolman",
+        "ui.guide.s3_body": "Map each Slicer extruder to any ACE slot (T0–T15), share one slot across extruders, or use Auto-Match. Material mismatches require explicit confirmation. With optional Spoolman configured, remaining filament (model + purge) is checked before printing.",
+        "ui.guide.s4_title": "4. Endless Spool & External Spool",
+        "ui.guide.s4_body": "Enable Endless Spool and pick Exact (Material + Color), Material, or Next Ready to preview likely backup spool chains (T2 → T3) and check if backups cover any deficit. Changes are sent to Klipper only when you click Upload / Print. With ACE Pro OFF, External Spool mode bypasses ACE checks and optionally tracks a chosen Spoolman spool.",
+        "ui.guide.s5_title": "5. FAQ & Troubleshooting",
+        "ui.guide.s5_body": "If Map · Check · Send does not open when clicking Print (especially after an OrcaSlicer update), reload the plugin under Plugins and verify KobraVanKenorca_PostProcess is listed once under Process → Others → Slicing Pipeline Plugin. Cancel aborts the upload safely without starting a print.",
         "ui.modal.map.ext_spool_badge": "External Spool · ACE bypassed",
         "ui.modal.map.ext_spool_klipper": "ACE Pro is disabled in Klipper (output_pin ACE_Pro = 0) — printing via external spool; ACE slot checks and purge commands are bypassed.",
         "ui.modal.map.ext_spool_manual": "External Spool mode active — ACE slot checks, tool remapping, and purge commands are bypassed (ensure ACE_Pro is OFF in Klipper if not using ACE).",
@@ -1368,12 +1384,28 @@ TRANSLATIONS: Dict[str, Dict[str, str]] = {
         "ui.modal.card.backup_badge": "↻ Backup: {slots}",
         "ui.modal.card.backup_none": "↻ Kein Backup",
         "ui.modal.card.backup_tip": "Voraussichtliches Backup ({mode}): {slots} ({mat}{rem}) übernimmt wahrscheinlich bei leerer Spule (Schätzung nach ACEPRO-Regeln)",
+        "ui.modal.card.backup_tip_driver": "Vom Treiber bestätigtes Backup ({mode}): {slots} ({mat}{rem}) laut ACEPRO ace_state.endless_spool_next_tool",
         "ui.modal.card.backup_short_tip": "Voraussichtliches Backup ({mode}): {slots} ({mat}{rem}) — es fehlen trotzdem noch {still_short} g für den Druck",
         "ui.modal.card.backup_none_tip": "Endless Spool ({mode}): Keine passende bereite Backup-Spule gefunden",
         "ui.modal.pred.backup_ok": "Es fehlen {deficit} g — voraussichtliches Backup {slots} ({avail} g übrig) reicht für den Druck.",
         "ui.modal.pred.backup_short": "Es fehlen {deficit} g — voraussichtliches Backup {slots} ({avail} g übrig) reicht ebenfalls nicht ({still_short} g fehlen weiter).",
         "ui.modal.pred.backup_unknown": "Es fehlen {deficit} g — voraussichtliches Backup {slots} (Restgewicht unbekannt).",
         "ui.modal.pred.backup_none": "Es fehlen {deficit} g — keine passende bereite Backup-Spule gefunden ({mode}).",
+        "ui.nav.guide": "Anleitung",
+        "ui.nav.guide_tip": "Kurzanleitung & FAQ öffnen",
+        "ui.settings.tab_guide": "Anleitung",
+        "ui.guide.intro": "Kurzübersicht zu Kobra-Van-Kenorca. Ausführliche Anleitung auf GitHub:",
+        "ui.guide.github_link": "Vollständige USER_GUIDE.md auf GitHub öffnen",
+        "ui.guide.s1_title": "1. Schnellstart (3 Schritte)",
+        "ui.guide.s1_body": "1) Moonraker-URL unter Einstellungen → Verbindung eintragen und verbinden. 2) Modell in der OrcaSlicer-Vorschau slicen. 3) Auf Drucken klicken — Map · Check · Send öffnet sich automatisch zum Prüfen von Slots, Material und Purge.",
+        "ui.guide.s2_title": "2. Slot-Bay, Auto-Feed, ACE-Schalter & Sperre",
+        "ui.guide.s2_body": "Laden/Entladen/Full Unload steuern die ACE-Slots (bei Full Unload am Drucker bleiben, sonst verheddert sich die Spule!). Auto-Feed schaltet den Vorschub-Assistenten (grün = AN). Der ⏻-Schalter steuert Klippers ACE_Pro-Pin (ACE vs. externe Spule). Bei aktivem Druck sperrt die Hardware-Sperre alle Aktionen — Entsperren im orangenen Hinweis nur für manuelle Eingriffe nutzen.",
+        "ui.guide.s3_title": "3. Map · Check · Send & Spoolman",
+        "ui.guide.s3_body": "Ordne jeden Slicer-Extruder einem ACE-Slot (T0–T15) zu, nutze Auto-Match oder teile einen Slot für mehrere Extruder. Material-Abweichungen müssen explizit bestätigt werden. Mit optionalem Spoolman wird geprüft, ob die Restmenge (Modell + Purge) ausreicht.",
+        "ui.guide.s4_title": "4. Endless Spool & Externe Spule",
+        "ui.guide.s4_body": "Aktiviere Endless Spool und wähle Exakt (Material + Farbe), Material oder Nächste bereite, um die voraussichtliche Backup-Kette (T2 → T3) inkl. Restmengen-Check zu sehen. Änderungen werden erst bei Upload / Druckstart an Klipper gesendet. Bei ACE Pro AUS umgeht der Externe-Spule-Modus alle ACE-Prüfungen und trackt optional eine Spoolman-Spule.",
+        "ui.guide.s5_title": "5. FAQ & Fehlerbehebung",
+        "ui.guide.s5_body": "Öffnet sich Map · Check · Send beim Drucken nicht (besonders nach einem OrcaSlicer-Update), lade das Plugin unter Plugins neu und prüfe, ob KobraVanKenorca_PostProcess einmalig unter Prozess → Sonstiges → Slicing Pipeline Plugin steht. Abbrechen stoppt den Upload sicher ohne Druckstart.",
         "ui.modal.map.ext_spool_badge": "Externe Spule · ACE umgangen",
         "ui.modal.map.ext_spool_klipper": "ACE Pro ist in Klipper deaktiviert (output_pin ACE_Pro = 0) — Druck über externe Spule; ACE-Slotprüfungen und Purge-Befehle werden übersprungen.",
         "ui.modal.map.ext_spool_manual": "Externe-Spule-Modus aktiv — ACE-Slotprüfungen, Tool-Mapping und Purge-Befehle werden übersprungen (ggf. ACE_Pro in Klipper auf 0 setzen).",
@@ -4505,6 +4537,13 @@ class MoonrakerClient:
         )
         endless_mode_raw = str(save_vars.get("ace_endless_spool_match_mode") or "exact").strip().lower()
         endless_spool_mode = endless_mode_raw if endless_mode_raw in ("exact", "material", "next") else "exact"
+        raw_es_next = ace_mgr.get("endless_spool_next_tool", -1)
+        try:
+            endless_spool_next_tool = (
+                int(raw_es_next) if raw_es_next is not None and not isinstance(raw_es_next, bool) else -1
+            )
+        except (ValueError, TypeError):
+            endless_spool_next_tool = -1
 
         raw_hw_state = str(primary_inst.get("connection_state") or "connected").strip().lower()
         return {
@@ -4517,6 +4556,7 @@ class MoonrakerClient:
             "ace_pro_enabled": ace_pro_enabled,
             "endless_spool_enabled": endless_spool_enabled,
             "endless_spool_mode": endless_spool_mode,
+            "endless_spool_next_tool": endless_spool_next_tool,
             "ace_instances": resolved_instances,
             "ace_count": resolved_instances,
             "current_index": current_index,
@@ -13504,6 +13544,11 @@ font-weight: 600;
 .endless-mode-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .backup-spool-badge { position: relative; display: inline-flex; align-items: center; gap: 4px; cursor: help; }
 .backup-swatch-dot { width: 8px; height: 8px; border-radius: 50%; border: 1px solid rgba(128,128,128,0.6); display: inline-block; flex-shrink: 0; }
+.guide-acc { display: flex; flex-direction: column; gap: 6px; }
+.guide-acc details { border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-sub); padding: 7px 10px; }
+.guide-acc summary { font-weight: 700; font-size: 12px; cursor: pointer; color: var(--fg); }
+.guide-acc p { margin: 6px 0 2px; font-size: 11.5px; line-height: 1.48; color: var(--muted); }
+.guide-link { color: var(--accent); font-weight: 600; text-decoration: underline; }
 .mismatch-gate-box {
     display: none;
 flex-direction: column;
@@ -13919,6 +13964,7 @@ box-shadow: none;
 </button>
 <div id="headerPrinterMenu" class="custom-select-menu" role="listbox"></div>
 </div>
+<button id="btnNavGuide" onclick="openSettingsModal('guide')" data-i18n-title="ui.nav.guide_tip" title="Open Quick-Start Guide &amp; FAQ"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span data-i18n="ui.nav.guide">Guide</span></button>
 <button id="btnNavSettings" onclick="openSettingsModal('connection')"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg><span data-i18n="ui.nav.settings">Settings</span></button>
 <button id="btnNavDiagnostics" onclick="openDrawer('diagnosticsModal')"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span data-i18n="ui.nav.diagnostics">Flush &amp; Audit</span></button>
 <button id="btnNavRefresh" onclick="requestStatus()"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg><span data-i18n="ui.header.refresh">Refresh</span></button>
@@ -14193,6 +14239,7 @@ box-shadow: none;
 <button type="button" role="tab" id="settingsTabBtn_language" class="settings-tab-btn" onclick="switchSettingsTab('language')" data-i18n="ui.settings.tab_language">Language</button>
 <button type="button" role="tab" id="settingsTabBtn_paths" class="settings-tab-btn" onclick="switchSettingsTab('paths')" data-i18n="ui.settings.tab_paths">Paths</button>
 <button type="button" role="tab" id="settingsTabBtn_diagnostics" class="settings-tab-btn" onclick="switchSettingsTab('diagnostics')" data-i18n="ui.settings.tab_diagnostics">Diagnostics</button>
+<button type="button" role="tab" id="settingsTabBtn_guide" class="settings-tab-btn" onclick="switchSettingsTab('guide')" data-i18n="ui.settings.tab_guide">Guide</button>
 </div>
 
 <!-- TAB 1: Connection (Moonraker & Spoolman) -->
@@ -14364,6 +14411,23 @@ ACE Status: — | Active Tool: — | Temp: —
 <div class="row" style="justify-content:flex-end;">
 <button type="button" id="btnNavLog" onclick="closeDrawer('settingsModal'); openDrawer('logModal');"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span data-i18n="ui.settings.diag.open_log">Open Status Log</span></button>
 <button type="button" onclick="closeDrawer('settingsModal'); openDrawer('diagnosticsModal');" data-i18n="ui.settings.diag.open_flush">Open Flush &amp; Audit</button>
+</div>
+</div>
+</div>
+
+<!-- TAB 6: Guide / Help -->
+<div id="settingsPanel_guide" class="settings-panel" role="tabpanel">
+<div class="settings-section-card">
+<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">
+<span data-i18n="ui.guide.intro">Quick overview of Kobra-Van-Kenorca. Full guide with details on GitHub:</span>
+<a class="guide-link" href="https://github.com/Gwebster-r/Kobra-Van-Kenorca/blob/main/USER_GUIDE.md" target="_blank" rel="noopener noreferrer" data-i18n="ui.guide.github_link">Open full USER_GUIDE.md on GitHub</a>
+</div>
+<div class="guide-acc">
+<details open><summary data-i18n="ui.guide.s1_title">1. Quick Start (3 Steps)</summary><p data-i18n="ui.guide.s1_body"></p></details>
+<details><summary data-i18n="ui.guide.s2_title">2. Slot Bay, Auto-Feed, ACE Power &amp; Safety Lock</summary><p data-i18n="ui.guide.s2_body"></p></details>
+<details><summary data-i18n="ui.guide.s3_title">3. Map · Check · Send &amp; Spoolman</summary><p data-i18n="ui.guide.s3_body"></p></details>
+<details><summary data-i18n="ui.guide.s4_title">4. Endless Spool &amp; External Spool</summary><p data-i18n="ui.guide.s4_body"></p></details>
+<details><summary data-i18n="ui.guide.s5_title">5. FAQ &amp; Troubleshooting</summary><p data-i18n="ui.guide.s5_body"></p></details>
 </div>
 </div>
 </div>
@@ -14923,7 +14987,7 @@ return !!(el && el.classList.contains("open"));
 }
 
 function switchSettingsTab(tabName) {
-const valid = ["connection", "purge", "appearance", "language", "paths", "diagnostics"];
+const valid = ["connection", "purge", "appearance", "language", "paths", "diagnostics", "guide"];
 const target = valid.includes(String(tabName || "")) ? String(tabName) : "connection";
 activeSettingsTab = target;
 valid.forEach(name => {
@@ -17672,7 +17736,16 @@ extraLeftBadgesHtml += `<span class="badge warn">${escapeHtml(t("ui.modal.card.c
 }
 let noBackupWarnText = "";
 if (filUsed && !extBypass && isMoonrakerOnline() && endlessSpoolDraft.enabled && assignedSlot) {
-const bkChain = findEndlessSpoolBackupChain(slots, mapped, endlessSpoolDraft.mode);
+let bkChain = findEndlessSpoolBackupChain(slots, mapped, endlessSpoolDraft.mode);
+let driverConfirmed = false;
+const stLiveEs = (currentState && currentState.ace_status) ? currentState.ace_status : {};
+const drvNext = (stLiveEs.endless_spool_next_tool !== undefined && stLiveEs.endless_spool_next_tool !== null)
+? Number(stLiveEs.endless_spool_next_tool)
+: -1;
+if (!endlessSpoolDraft.dirty && !!stLiveEs.endless_spool_enabled && Number(stLiveEs.current_index) === mapped && drvNext >= 0 && slotByTool[drvNext]) {
+driverConfirmed = true;
+bkChain = [slotByTool[drvNext]].concat(bkChain.filter(c => Number(c.tool) !== drvNext));
+}
 const modeLbl = endlessSpoolDraft.mode === "material"
 ? t("ui.modal.opt.endless_mode_material")
 : (endlessSpoolDraft.mode === "next" ? t("ui.modal.opt.endless_mode_next") : t("ui.modal.opt.endless_mode_exact"));
@@ -17713,9 +17786,10 @@ const bkRem = bkAvailTotal !== null ? ` · ${bkAvailTotal.toFixed(0)} g` : "";
 const stillShortG = (deficitG > 0 && bkAvailTotal !== null) ? Math.max(0, deficitG - bkAvailTotal) : 0;
 const coversDeficit = deficitG > 0 && bkAvailTotal !== null && bkAvailTotal >= deficitG - 1e-6;
 backupEval = { slotsLabel, availG: bkAvailTotal, coversDeficit, stillShortG, modeLbl };
-const bkTip = stillShortG > 1e-6
-? t("ui.modal.card.backup_short_tip", { mode: modeLbl, slots: slotsLabel, mat: matLabel, rem: bkRem, still_short: stillShortG.toFixed(1) })
-: t("ui.modal.card.backup_tip", { mode: modeLbl, slots: slotsLabel, mat: matLabel, rem: bkRem });
+const tipKey = stillShortG > 1e-6
+? "ui.modal.card.backup_short_tip"
+: ((driverConfirmed && usedChain.length === 1) ? "ui.modal.card.backup_tip_driver" : "ui.modal.card.backup_tip");
+const bkTip = t(tipKey, { mode: modeLbl, slots: slotsLabel, mat: matLabel, rem: bkRem, still_short: stillShortG.toFixed(1) });
 const bkCls = stillShortG > 1e-6 ? "warn" : "ok";
 extraLeftBadgesHtml += `<span class="badge ${bkCls} backup-spool-badge" data-tooltip="${escapeHtml(bkTip)}" aria-label="${escapeHtml(bkTip)}"><span class="backup-swatch-dot" style="background:${escapeHtml(firstHex)};"></span>${escapeHtml(t("ui.modal.card.backup_badge", { slots: slotsLabel }))}</span>`;
 } else if (isShortSpool || isLowSpool) {
