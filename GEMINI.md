@@ -1,4 +1,8 @@
-# Projekt-Spezifikation: OrcaSlicer 2.5.0 Plugin für Anycubic Kobra S1 (Vanilla Klipper + ACE Pro)
+# Projekt-Spezifikation: Kobra-Van-Kenorca (`Kobra`) — OrcaSlicer 2.5.0 Plugin für Anycubic Kobra S1 (Vanilla Klipper + ACE Pro)
+
+- **Hauptdatei:** `kobra_van_kenorca_plugin.py` (vormals `KobraOrca` / `kobra_orca_plugin.py`, `vKobraACE` / `vkobra_ace_plugin.py`)
+- **Tab-Name & Pipeline:** OrcaSlicer-Tab `Kobra`, Slicing-Pipeline `KobraVanKenorca_PostProcess`
+- **Theme & Assets:** Eingebettetes Logo (`assets/kobra_orca_logo.png` / `KOBRA_ORCA_LOGO_DATA_URI`) und `KobraOrca`-Theme in `Settings -> Appearance`.
 
 ## Zielumgebung & Runtime
 - **Slicer:** OrcaSlicer 2.5.0 (Linux Flatpak) Embedded CPython Plugin API (`import orca`).

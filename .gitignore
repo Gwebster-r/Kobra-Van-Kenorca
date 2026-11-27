@@ -1,0 +1,16 @@
+# Backups & temporäre Dateien
+*.bak
+backups/
+_backups/
+
+# Python Bytecode
+__pycache__/
+*.py[cod]
+
+# Build-Artefakte (optional, falls dist/ nicht versioniert werden soll)
+dist/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
