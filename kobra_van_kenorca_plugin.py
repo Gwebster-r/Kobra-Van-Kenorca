@@ -853,6 +853,14 @@ TRANSLATIONS: Dict[str, Dict[str, str]] = {
         "ui.modal.card.backup_short_tip": "Likely backup ({mode}): {slots} ({mat}{rem}) — still {still_short} g short to finish the print",
         "ui.modal.card.backup_none_tip": "Endless Spool ({mode}): No matching ready backup spool found",
         "ui.modal.pred.backup_ok": "Short by {deficit} g — likely backup {slots} ({avail} g left) is enough to finish the print.",
+        "ui.modal.pred.short_prefix": "Short by {deficit} g",
+        "ui.modal.pred.backup_ok_tail": "— likely backup {slots} ({avail} g left) is enough to finish the print.",
+        "ui.map.sum_short_mismatch": "Material mismatch",
+        "ui.map.sum_short_insufficient": "Not enough filament",
+        "ui.map.sum_short_low": "Low spool reserve",
+        "ui.map.sum_short_no_backup": "No backup spool",
+        "ui.map.sum_short_empty": "Empty slot",
+        "ui.map.sum_short_invalid": "Invalid slot",
         "ui.modal.pred.backup_short": "Short by {deficit} g — likely backup {slots} ({avail} g left) is also not enough ({still_short} g still short).",
         "ui.modal.pred.backup_unknown": "Short by {deficit} g — likely backup {slots} (remaining weight unknown).",
         "ui.modal.pred.backup_none": "Short by {deficit} g — no matching ready backup spool found ({mode}).",
@@ -1389,6 +1397,14 @@ TRANSLATIONS: Dict[str, Dict[str, str]] = {
         "ui.modal.card.backup_short_tip": "Voraussichtliches Backup ({mode}): {slots} ({mat}{rem}) — es fehlen trotzdem noch {still_short} g für den Druck",
         "ui.modal.card.backup_none_tip": "Endless Spool ({mode}): Keine passende bereite Backup-Spule gefunden",
         "ui.modal.pred.backup_ok": "Es fehlen {deficit} g — voraussichtliches Backup {slots} ({avail} g übrig) reicht für den Druck.",
+        "ui.modal.pred.short_prefix": "Es fehlen {deficit} g",
+        "ui.modal.pred.backup_ok_tail": "— voraussichtliches Backup {slots} ({avail} g übrig) reicht für den Druck.",
+        "ui.map.sum_short_mismatch": "Materialabweichung",
+        "ui.map.sum_short_insufficient": "Zu wenig Filament",
+        "ui.map.sum_short_low": "Wenig Restfilament",
+        "ui.map.sum_short_no_backup": "Keine Backup-Spule",
+        "ui.map.sum_short_empty": "Leerer Slot",
+        "ui.map.sum_short_invalid": "Ungültiger Slot",
         "ui.modal.pred.backup_short": "Es fehlen {deficit} g — voraussichtliches Backup {slots} ({avail} g übrig) reicht ebenfalls nicht ({still_short} g fehlen weiter).",
         "ui.modal.pred.backup_unknown": "Es fehlen {deficit} g — voraussichtliches Backup {slots} (Restgewicht unbekannt).",
         "ui.modal.pred.backup_none": "Es fehlen {deficit} g — keine passende bereite Backup-Spule gefunden ({mode}).",
@@ -13448,6 +13464,8 @@ padding-top: 2px;
 .prediction-note.is-low { color: var(--warn); }
 .prediction-note.is-short { color: var(--danger); }
 .prediction-note.is-ok { color: var(--ok); }
+.prediction-note .is-short-part { color: var(--danger); font-weight: 700; }
+.btn-warn-circle { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 99px; background: var(--warn); color: #111827; font-size: 11px; font-weight: 800; line-height: 1; flex-shrink: 0; }
 .job-meta-file-box {
 justify-content: center;
 }
@@ -13711,7 +13729,9 @@ border-color: var(--accent);
 .toggle-pill[data-tooltip]:hover::after,
 .toggle-pill[data-tooltip]:focus-within::after,
 .match-icon-badge[data-tooltip]:hover::after,
-.backup-spool-badge[data-tooltip]:hover::after {
+.backup-spool-badge[data-tooltip]:hover::after,
+.sum-warn-badge[data-tooltip]:hover::after,
+.btn-cta-send[data-tooltip]:hover::after {
 content: attr(data-tooltip);
 position: absolute;
 bottom: calc(100% + 6px);
@@ -13730,6 +13750,16 @@ opacity: 1;
 z-index: 250;
 box-shadow: var(--tooltip-shadow, 0 8px 22px rgba(0, 0, 0, 0.58));
 }
+.sum-warn-badge { position: relative; cursor: help; }
+.sum-warn-badge[data-tooltip]:hover::after,
+.btn-cta-send[data-tooltip]:hover::after {
+white-space: pre-line;
+text-align: left;
+line-height: 1.4;
+max-width: 280px;
+}
+.btn-cta-send { position: relative; }
+.btn-cta-send[data-tooltip]:hover::after { left: auto; right: 0; transform: none; }
 .backup-spool-badge[data-tooltip]:hover::after {
 left: 0;
 transform: none;
@@ -13919,7 +13949,6 @@ box-shadow: none;
 </head>
 <body>
 <div class="app-shell">
-<!-- Unified Compact Top Bar (Single Screen, Zero Duplicate Telemetry) -->
 <header class="topbar">
 <div class="brand-block">
 <div class="brand-mark"><img class="brand-logo-img" src="__KOBRA_ORCA_LOGO_URI__" alt="Kobra-Van-Kenorca Logo" /></div>
@@ -13928,7 +13957,6 @@ box-shadow: none;
 <div class="brand-sub" data-i18n="ui.brand.sub">Kobra-Van-Kenorca — Vanilla Klipper &amp; ACE Pro Bridge for OrcaSlicer</div>
 </div>
 </div>
-
 <div class="top-telemetry">
 <div class="exec-tile" id="execConnTile">
 <span id="connBadge" class="badge empty" data-i18n="ui.conn.unconfigured">Not configured</span>
@@ -13957,7 +13985,6 @@ box-shadow: none;
 <span class="exec-sub" id="execGcodeSub" data-i18n="ui.exec.gcode.select_sub">Select G-code for Preview / Patch</span>
 </div>
 </div>
-
 <div class="topbar-right">
 <div id="headerPrinterSelect" class="custom-select" data-value="default" style="min-width:130px;max-width:210px;">
 <button type="button" id="headerPrinterTrigger" class="custom-select-trigger" onclick="toggleHeaderPrinterDropdown(event)" aria-haspopup="listbox" aria-expanded="false" data-i18n-aria-label="ui.header.printer_aria">
@@ -13972,7 +13999,6 @@ box-shadow: none;
 <button id="btnNavRefresh" onclick="requestStatus()"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg><span data-i18n="ui.header.refresh">Refresh</span></button>
 </div>
 </header>
-
 <div id="connectionNoticeBanner" class="connection-banner" role="status" aria-live="polite">
 <div class="connection-banner-inner">
 <span class="banner-msg-row">
@@ -13985,18 +14011,13 @@ box-shadow: none;
 </div>
 </div>
 </div>
-
-<!-- Primary View: ACE Pro Live Slot Bay (T0-T7, 4x2 Grid) -->
 <section class="card slots-main-card">
 <div class="card-head">
 <h2 id="slotBayTitle" class="card-title" data-i18n="ui.sec3.title">3. ACE Pro Live Slot Bay (T0–T7)</h2>
 </div>
 <div id="slotsContainer" class="slots-grid"></div>
 </section>
-
-<!-- Single-Row Compact Dryer & Print Trigger Bar -->
 <section class="bottom-control-strip">
-<!-- Cluster 1: ACE Pro Dryer -->
 <div class="strip-cluster">
 <span class="cluster-tag" data-i18n="ui.bar.dryer_label">ACE Dryer:</span>
 <span id="dryerBadge" class="badge empty" data-i18n="ui.sec2.dryer_stop_badge">Dryer: Stop</span>
@@ -14035,18 +14056,12 @@ box-shadow: none;
 <button id="btnDryerStop" class="danger" onclick="stopDryer()"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1"/></svg><span data-i18n="ui.sec2.btn_dryer_stop">Dryer Stop</span></button>
 </div>
 </section>
-
-<!-- Centered Pre-Print Send Modal Trigger Bar (below ACE Dryer) -->
 <section class="prepare-action-bar">
 <div class="print-trigger-cluster">
 <button id="btnOpenPrePrintModal" class="primary btn-cta-send" aria-busy="false" onclick="openPrePrintModal()"><span class="btn-spinner" aria-hidden="true"></span><svg class="ui-icon" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg><span id="btnOpenPrePrintLabel" data-i18n="ui.bar.btn_prepare">Prepare &amp; Send Print</span></button>
 </div>
 </section>
 </div>
-
-<!-- ===================================================================== -->
-<!-- INTERACTIVE PRE-PRINT SEND MODAL (SnapSend-Inspired Single-Card View) -->
-<!-- ===================================================================== -->
 <div id="prePrintModal" class="modal-backdrop" role="dialog" aria-modal="true">
 <div class="modal-dialog modal-preprint">
 <div class="modal-header">
@@ -14063,9 +14078,7 @@ box-shadow: none;
 <button type="button" onclick="closePrePrintModal()"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span data-i18n="ui.modal.close">Close</span></button>
 </div>
 </div>
-
 <div class="modal-body">
-<!-- Top-Left Enlarged G-code Thumbnail & 2x2 Job Metadata Strip -->
 <div class="modal-job-hero">
 <div id="modalThumbBox" class="modal-thumb-box" onclick="onModalThumbBoxClick(event)" title="No embedded G-code thumbnail found" data-i18n-title="ui.modal.thumb.fallback_title">
 <img id="modalThumbImg" class="modal-thumb-img" src="" alt="" style="display:none;" />
@@ -14096,7 +14109,6 @@ box-shadow: none;
 </div>
 </div>
 </div>
-
 <div id="modalStaleModelBanner" class="modal-stale-banner" role="alert">
 <div class="banner-msg-row">
 <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -14107,8 +14119,6 @@ box-shadow: none;
 <button type="button" class="subtle" onclick="clearModalGcode()"><svg class="ui-icon ui-icon-sm" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span data-i18n="ui.modal.stale.clear_btn">Unload Stale G-code</span></button>
 </div>
 </div>
-
-<!-- Unified Bordered Mapping & Filament Prediction Container -->
 <div id="modalMappingPanel" class="mapping-panel">
 <div class="mapping-toolbar">
 <div class="mapping-toolbar-left">
@@ -14131,7 +14141,6 @@ box-shadow: none;
 <button class="subtle" onclick="resetColorMapping()"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg><span data-i18n="ui.sec4.btn_reset">1:1 Default</span></button>
 </div>
 </div>
-
 <div id="modalExternalSpoolBanner" class="modal-external-banner" role="status">
 <div class="banner-msg-row">
 <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
@@ -14139,12 +14148,8 @@ box-shadow: none;
 </div>
 <button type="button" id="btnSwitchBackToAce" class="subtle" style="display:none;" onclick="setExternalSpoolMode(false)" data-i18n="ui.modal.map.switch_to_ace">Switch to ACE Pro</button>
 </div>
-
-<!-- Visual Filament-to-Slot Mapping + Integrated Remaining Prediction Cards -->
 <div id="modalMappingCards" class="mapping-cards-grid"></div>
 </div>
-
-<!-- Material Mismatch Explicit Confirmation Gate -->
 <div id="modalMismatchGate" class="mismatch-gate-box">
 <div>
 <span class="banner-msg-row"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><strong data-i18n="ui.modal.mismatch_gate.title">Material Mismatch Detected</strong></span>
@@ -14157,8 +14162,6 @@ box-shadow: none;
 </label>
 </div>
 </div>
-
-<!-- Compact Pre-Print Options & Primary Action Footer -->
 <div class="modal-footer">
 <div class="preprint-toggles-row">
 <label class="toggle-pill" data-i18n-title="ui.modal.opt.skip_purge_tip" title="SKIP_PURGE_FOR_ALREADY_LOADED_TOOL=1 (K3/K3M only — KS1/KS1M G9111 always uses Smart Skip)" data-tooltip="SKIP_PURGE_FOR_ALREADY_LOADED_TOOL=1 (K3/K3M only — KS1/KS1M G9111 always uses Smart Skip)">
@@ -14185,12 +14188,10 @@ box-shadow: none;
 <span data-i18n="ui.modal.opt.external_spool">External Spool (Bypass ACE)</span>
 </label>
 </div>
-
 <div id="modalSendLockNotice" class="modal-send-lock-notice" role="status" aria-live="polite">
 <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
 <span id="modalSendLockText"></span>
 </div>
-
 <div class="modal-actions-bar">
 <button id="btnInspectFlushPreview" onclick="inspectFlushFromModal()"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span data-i18n="ui.modal.btn.inspect_flush">Inspect Flush Volume &amp; Post-Processing Preview</span></button>
 <div class="row modal-actions-right">
@@ -14198,16 +14199,12 @@ box-shadow: none;
 <button id="btnModalApplyLocal" class="primary" onclick="runPostProcessAndUpload(false, false)"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg><span data-i18n="ui.modal.btn.apply_local">Apply &amp; Patch Locally</span></button>
 <button id="btnModalExportGcode" onclick="exportPatchedGcode()"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span data-i18n="ui.modal.btn.export_gcode">Export .gcode...</span></button>
 <button id="btnModalUploadOnly" class="primary" onclick="runPostProcessAndUpload(true, false)"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span data-i18n="ui.modal.btn.upload_only">Upload Only</span></button>
-<button id="btnModalSendPrint" class="primary btn-cta-send" onclick="runPostProcessAndUpload(true, true)"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg><span data-i18n="ui.modal.btn.send_print">Upload &amp; Start Print</span></button>
+<button id="btnModalSendPrint" class="primary btn-cta-send" onclick="runPostProcessAndUpload(true, true)"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg><span data-i18n="ui.modal.btn.send_print">Upload &amp; Start Print</span><span class="btn-warn-circle" style="display:none;" aria-hidden="true">!</span></button>
 </div>
 </div>
 </div>
 </div>
 </div>
-
-<!-- ===================================================================== -->
-<!-- SECONDARY MODAL 1: UNIFIED SETTINGS MENU                              -->
-<!-- ===================================================================== -->
 <div id="fullUnloadConfirmModal" class="modal-backdrop" role="dialog" aria-modal="true" onclick="closeFullUnloadModal()">
 <div class="modal-dialog" style="max-width:460px;" onmousedown="event.stopPropagation()" onclick="event.stopPropagation()">
 <div class="modal-header">
@@ -14223,7 +14220,6 @@ box-shadow: none;
 </div>
 </div>
 </div>
-
 <div id="settingsModal" class="modal-backdrop" role="dialog" aria-modal="true">
 <div class="modal-dialog modal-settings" onmousedown="event.stopPropagation()" onclick="event.stopPropagation()">
 <div class="modal-header">
@@ -14243,8 +14239,6 @@ box-shadow: none;
 <button type="button" role="tab" id="settingsTabBtn_diagnostics" class="settings-tab-btn" onclick="switchSettingsTab('diagnostics')" data-i18n="ui.settings.tab_diagnostics">Diagnostics</button>
 <button type="button" role="tab" id="settingsTabBtn_guide" class="settings-tab-btn" onclick="switchSettingsTab('guide')" data-i18n="ui.settings.tab_guide">Guide</button>
 </div>
-
-<!-- TAB 1: Connection (Moonraker & Spoolman) -->
 <div id="settingsPanel_connection" class="settings-panel active" role="tabpanel">
 <div class="settings-section-card">
 <div><span class="badge info" data-i18n="ui.sec1.offline_badge">Offline analysis works independently</span></div>
@@ -14303,8 +14297,6 @@ ACE Status: — | Active Tool: — | Temp: —
 </div>
 </div>
 </div>
-
-<!-- TAB 2: Purge & Reserve -->
 <div id="settingsPanel_purge" class="settings-panel" role="tabpanel">
 <div class="settings-section-card">
 <div class="row">
@@ -14330,8 +14322,6 @@ ACE Status: — | Active Tool: — | Temp: —
 </details>
 </div>
 </div>
-
-<!-- TAB 3: Appearance (Theme + 8 Color Schemes) -->
 <div id="settingsPanel_appearance" class="settings-panel" role="tabpanel">
 <div class="settings-section-card">
 <div class="row" style="justify-content:space-between;">
@@ -14357,8 +14347,6 @@ ACE Status: — | Active Tool: — | Temp: —
 <div style="font-size:11px;color:var(--muted);" data-i18n="ui.settings.appearance.note">Accent colors adapt buttons, highlights, and status controls across Light, Dark, Auto, and KobraOrca without altering ACE filament colors.</div>
 </div>
 </div>
-
-<!-- TAB 3: Language -->
 <div id="settingsPanel_language" class="settings-panel" role="tabpanel">
 <div class="settings-section-card">
 <div class="row" style="justify-content:space-between;">
@@ -14371,8 +14359,6 @@ ACE Status: — | Active Tool: — | Temp: —
 <div style="font-size:11px;color:var(--muted);" data-i18n="ui.settings.language.hint">Language changes apply immediately without losing unsaved connection fields.</div>
 </div>
 </div>
-
-<!-- TAB 4: Paths -->
 <div id="settingsPanel_paths" class="settings-panel" role="tabpanel">
 <div class="settings-section-card">
 <div class="settings-section-title" data-i18n="ui.settings.paths.gcode_active">Active G-Code File</div>
@@ -14394,8 +14380,6 @@ ACE Status: — | Active Tool: — | Temp: —
 </div>
 </div>
 </div>
-
-<!-- TAB 5: Diagnostics -->
 <div id="settingsPanel_diagnostics" class="settings-panel" role="tabpanel">
 <div class="settings-section-card">
 <div class="row" style="justify-content:space-between;">
@@ -14416,8 +14400,6 @@ ACE Status: — | Active Tool: — | Temp: —
 </div>
 </div>
 </div>
-
-<!-- TAB 6: Guide / Help -->
 <div id="settingsPanel_guide" class="settings-panel" role="tabpanel">
 <div class="settings-section-card">
 <div style="font-size:12px;color:var(--muted);margin-bottom:6px;" data-i18n="ui.guide.intro">Quick overview of Kobra-Van-Kenorca. Full guide on GitHub (copy link for your browser):</div>
@@ -14437,10 +14419,6 @@ ACE Status: — | Active Tool: — | Temp: —
 </div>
 </div>
 </div>
-
-<!-- ===================================================================== -->
-<!-- SECONDARY MODAL 2: FLUSH VOLUME MONITORING & POST-PROCESSING AUDIT    -->
-<!-- ===================================================================== -->
 <div id="diagnosticsModal" class="modal-backdrop" role="dialog" aria-modal="true">
 <div class="modal-dialog modal-lg" onmousedown="event.stopPropagation()" onclick="event.stopPropagation()">
 <div class="modal-header">
@@ -14457,7 +14435,6 @@ ACE Status: — | Active Tool: — | Temp: —
 <div class="modal-body">
 <div id="flushKpiGrid" class="kpi-grid"></div>
 <div id="flushAuditWarnings"></div>
-
 <div class="grid-2" style="margin-top:2px;">
 <div class="inspector-panel">
 <div class="inspector-panel-head">
@@ -14487,7 +14464,6 @@ ACE Status: — | Active Tool: — | Temp: —
 <div id="flushMatrixContainer" class="matrix-scroll"></div>
 </div>
 </div>
-
 <details id="flushEventsDetails" class="events-details" open>
 <summary>
 <span data-i18n="ui.sec6.events_summary">Toolchange Sequence &amp; Injected ACE_SET_PURGE_AMOUNT Commands</span>
@@ -14512,10 +14488,6 @@ ACE Status: — | Active Tool: — | Temp: —
 </div>
 </div>
 </div>
-
-<!-- ===================================================================== -->
-<!-- SECONDARY MODAL 3: STATUS & AUDIT LOG                                 -->
-<!-- ===================================================================== -->
 <div id="logModal" class="modal-backdrop" role="dialog" aria-modal="true">
 <div class="modal-dialog modal-sm" onmousedown="event.stopPropagation()" onclick="event.stopPropagation()">
 <div class="modal-header">
@@ -14530,10 +14502,6 @@ ACE Status: — | Active Tool: — | Temp: —
 </div>
 </div>
 </div>
-
-<!-- ===================================================================== -->
-<!-- SECONDARY MODAL 4: THUMBNAIL DETAIL ZOOM LIGHTBOX                     -->
-<!-- ===================================================================== -->
 <div id="thumbZoomModal" class="modal-backdrop modal-backdrop-zoom" role="dialog" aria-modal="true" onclick="onThumbZoomBackdropClick(event)">
 <div class="thumb-zoom-dialog" onclick="event.stopPropagation()">
 <div class="modal-header">
@@ -14554,10 +14522,6 @@ ACE Status: — | Active Tool: — | Temp: —
 </div>
 </div>
 </div>
-
-<!-- ===================================================================== -->
-<!-- SECONDARY MODAL 5: EXPORT G-CODE DESTINATION PICKER                   -->
-<!-- ===================================================================== -->
 <div id="exportPathModal" class="modal-backdrop modal-backdrop-zoom" role="dialog" aria-modal="true" onclick="closeExportPathModal()">
 <div class="modal-dialog modal-sm" onmousedown="event.stopPropagation()" onclick="event.stopPropagation()">
 <div class="modal-header">
@@ -14586,9 +14550,7 @@ ACE Status: — | Active Tool: — | Temp: —
 </div>
 </div>
 </div>
-</div>
-
-<script>
+</div><script>
 const translations = __I18N_JSON__;
 let currentLanguage = "en";
 
@@ -17684,6 +17646,7 @@ if (btnSwitchAce) btnSwitchAce.style.display = "none";
 
 let errCount = 0;
 let warnCount = 0;
+const summaryIssues = [];
 const mismatchDescriptions = [];
 const activeFils = filaments.filter(f => isFilamentUsed(f, hasAnyUsageData));
 
@@ -17713,6 +17676,7 @@ compactStatusBadgeHtml = `<span class="badge empty">${escapeHtml(t("ui.map.unuse
 compactStatusBadgeHtml = `<span class="badge info">${escapeHtml(t("ui.modal.map.ext_spool_badge"))}</span>`;
 } else if (mapped < 0 || (slots.length > 0 && mapped >= maxSlot)) {
 errCount++;
+summaryIssues.push(`T${sTool}: ${t("ui.map.sum_short_invalid")}`);
 cardStateClass = "card-error";
 const invTip = t("ui.map.badge_invalid");
 compactStatusBadgeHtml = `<span class="badge warn match-icon-badge" data-tooltip="${escapeHtml(invTip)}" aria-label="${escapeHtml(invTip)}">!</span>`;
@@ -17821,6 +17785,7 @@ extraLeftBadgesHtml += `<span class="badge warn backup-spool-badge" data-tooltip
 
 if (isEmpty) {
 errCount++;
+summaryIssues.push(`T${sTool}: ${t("ui.map.sum_short_empty")}`);
 cardStateClass = "card-error";
 const emptyTip = t("ui.modal.card.empty_badge", { slot: mapped });
 compactStatusBadgeHtml = `<span class="badge warn match-icon-badge" data-tooltip="${escapeHtml(emptyTip)}" aria-label="${escapeHtml(emptyTip)}">!</span>`;
@@ -17829,6 +17794,7 @@ cardFallbackNoteHtml = `<div class="prediction-note is-short">${escapeHtml(empty
 const reasonParts = [];
 if (!isMatCompatible) {
 warnCount++;
+summaryIssues.push(`T${sTool}: ${t("ui.map.sum_short_mismatch")}`);
 cardStateClass = "card-mismatch";
 const misTxt = t("ui.modal.card.mismatch_badge", { slicer_mat: sMat, ace_mat: pMat });
 reasonParts.push(misTxt);
@@ -17836,13 +17802,16 @@ mismatchDescriptions.push(`T${sTool} (${sMat}) → T${mapped} (${pMat})`);
 }
 if (isShortSpool) {
 warnCount++;
+summaryIssues.push(`T${sTool}: ${t("ui.map.sum_short_insufficient")}`);
 if (cardStateClass === "" && !(backupEval && backupEval.coversDeficit)) cardStateClass = "card-error";
 if (shortTip) reasonParts.push(shortTip);
 } else if (isLowSpool) {
 warnCount++;
+summaryIssues.push(`T${sTool}: ${t("ui.map.sum_short_low")}`);
 if (lowTip) reasonParts.push(lowTip);
 }
 if (noBackupWarnText) {
+summaryIssues.push(`T${sTool}: ${t("ui.map.sum_short_no_backup")}`);
 reasonParts.push(noBackupWarnText);
 }
 if (reasonParts.length > 0) {
@@ -18054,7 +18023,7 @@ if (pStatus === "insufficient") {
 const defStr = Number(predItem.deficit_g || 0).toFixed(1);
 if (backupEval && backupEval.slotsLabel) {
 if (backupEval.coversDeficit) {
-noteHtml = `<div class="prediction-note is-ok">${escapeHtml(t("ui.modal.pred.backup_ok", { deficit: defStr, slots: backupEval.slotsLabel, avail: backupEval.availG.toFixed(1) }))}</div>`;
+noteHtml = `<div class="prediction-note is-ok"><span class="is-short-part">${escapeHtml(t("ui.modal.pred.short_prefix", { deficit: defStr }))}</span> ${escapeHtml(t("ui.modal.pred.backup_ok_tail", { slots: backupEval.slotsLabel, avail: backupEval.availG.toFixed(1) }))}</div>`;
 } else if (backupEval.availG !== null) {
 noteHtml = `<div class="prediction-note is-short">${escapeHtml(t("ui.modal.pred.backup_short", { deficit: defStr, slots: backupEval.slotsLabel, avail: backupEval.availG.toFixed(1), still_short: backupEval.stillShortG.toFixed(1) }))}</div>`;
 } else {
@@ -18140,13 +18109,24 @@ cardsContainer.appendChild(card);
 }
 });
 
+const issueTip = summaryIssues.join("\\n");
+const sendBtnEl = document.getElementById("btnModalSendPrint");
+const sendWarnEl = (sendBtnEl && sendBtnEl.querySelector) ? sendBtnEl.querySelector(".btn-warn-circle") : null;
+const hasSummaryAlerts = !extBypass && (errCount > 0 || warnCount > 0);
+if (sendWarnEl) sendWarnEl.style.display = hasSummaryAlerts ? "inline-flex" : "none";
+if (sendBtnEl) {
+if (hasSummaryAlerts && issueTip) sendBtnEl.setAttribute("data-tooltip", issueTip);
+else if (sendBtnEl.removeAttribute) sendBtnEl.removeAttribute("data-tooltip");
+}
 if (summaryBar) {
 if (extBypass && activeFils.length > 0) {
 summaryBar.innerHTML = `<span class="badge info">${escapeHtml(t("ui.modal.map.ext_spool_badge"))}</span>`;
 } else if (errCount > 0) {
-summaryBar.innerHTML = `<span class="badge danger">${escapeHtml(t("ui.map.sum_err_badge", { count: errCount }))}</span>`;
+const errAttr = issueTip ? ` data-tooltip="${escapeHtml(issueTip)}"` : "";
+summaryBar.innerHTML = `<span class="badge danger sum-warn-badge"${errAttr}>${escapeHtml(t("ui.map.sum_err_badge", { count: errCount }))}</span>`;
 } else if (warnCount > 0) {
-summaryBar.innerHTML = `<span class="badge warn">${escapeHtml(t("ui.map.sum_warn_badge", { count: warnCount }))}</span>`;
+const warnAttr = issueTip ? ` data-tooltip="${escapeHtml(issueTip)}"` : "";
+summaryBar.innerHTML = `<span class="badge warn sum-warn-badge"${warnAttr}>${escapeHtml(t("ui.map.sum_warn_badge", { count: warnCount }))}</span>`;
 } else if (activeFils.length === 0) {
 summaryBar.innerHTML = `<span class="badge warn">0</span>`;
 } else {
