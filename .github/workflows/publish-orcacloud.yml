@@ -10,7 +10,7 @@ permissions:
 
 env:
   # Space-separated globs matching the plugin files to upload (.whl / .py with OS suffix).
-  PLUGIN_FILES: "dist/kobra_van_kenorca_any.py"
+  PLUGIN_FILES: "dist/*.py"
   # Replace YOUR-PLUGIN-ID with the Release workflow URL from Orca Cloud -> Edit plugin -> GitHub publishing.
   PUBLISH_URL: "https://api.orcaslicer.com/api/v1/plugin-publish/plugins/YOUR-PLUGIN-ID/releases"
 
@@ -37,15 +37,18 @@ jobs:
           test "$size" -lt 1000000
           python3 -c 'import kobra_van_kenorca_plugin as p; assert set(p.TRANSLATIONS["en"]) == set(p.TRANSLATIONS["de"])'
 
-      - name: Prepare Orca Cloud upload file
+      - name: Prepare Orca Cloud upload files
         run: |
           mkdir -p dist
-          cp kobra_van_kenorca_plugin.py dist/kobra_van_kenorca_any.py
+          for target in linux_x86_64 macosx_arm64 macosx_x86_64 win_x86_64; do
+            cp kobra_van_kenorca_plugin.py "dist/kobra_van_kenorca_${target}.py"
+          done
+          ls -lh dist/
 
       - name: Publish release to OrcaCloud
         run: |
           set -euo pipefail
-          if [[ "$PUBLISH_URL" == *"YOUR-PLUGIN-ID"* ]]; then
+          if [[ "$PUBLISH_URL" == *"https://api.orcaslicer.com/api/v1/plugin-publish/plugins/3a943cf5-dfd1-4ddc-a11c-b3494b9e1c0f/releases"* ]]; then
             echo "Set PUBLISH_URL in .github/workflows/publish-orcacloud.yml first." >&2
             exit 1
           fi
