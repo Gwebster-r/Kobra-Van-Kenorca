@@ -859,8 +859,9 @@ TRANSLATIONS: Dict[str, Dict[str, str]] = {
         "ui.nav.guide": "Guide",
         "ui.nav.guide_tip": "Open Quick-Start Guide & FAQ",
         "ui.settings.tab_guide": "Guide",
-        "ui.guide.intro": "Quick overview of Kobra-Van-Kenorca. Full guide with details on GitHub:",
-        "ui.guide.github_link": "Open full USER_GUIDE.md on GitHub",
+        "ui.guide.intro": "Quick overview of Kobra-Van-Kenorca. Full guide on GitHub (copy link for your browser):",
+        "ui.guide.btn_copy_url": "Copy Link",
+        "ui.guide.copied": "GitHub guide URL copied to clipboard.",
         "ui.guide.s1_title": "1. Quick Start (3 Steps)",
         "ui.guide.s1_body": "1) Enter your printer's Moonraker URL under Settings → Connection and click Connect. 2) Slice your model in OrcaSlicer Preview. 3) Click Print — Map · Check · Send opens automatically so you can verify slots, materials, and purge before uploading.",
         "ui.guide.s2_title": "2. Slot Bay, Auto-Feed, ACE Power & Safety Lock",
@@ -1394,8 +1395,9 @@ TRANSLATIONS: Dict[str, Dict[str, str]] = {
         "ui.nav.guide": "Anleitung",
         "ui.nav.guide_tip": "Kurzanleitung & FAQ öffnen",
         "ui.settings.tab_guide": "Anleitung",
-        "ui.guide.intro": "Kurzübersicht zu Kobra-Van-Kenorca. Ausführliche Anleitung auf GitHub:",
-        "ui.guide.github_link": "Vollständige USER_GUIDE.md auf GitHub öffnen",
+        "ui.guide.intro": "Kurzübersicht zu Kobra-Van-Kenorca. Ausführliche Anleitung auf GitHub (Link für Browser kopieren):",
+        "ui.guide.btn_copy_url": "Link kopieren",
+        "ui.guide.copied": "GitHub-Anleitungs-URL in die Zwischenablage kopiert.",
         "ui.guide.s1_title": "1. Schnellstart (3 Schritte)",
         "ui.guide.s1_body": "1) Moonraker-URL unter Einstellungen → Verbindung eintragen und verbinden. 2) Modell in der OrcaSlicer-Vorschau slicen. 3) Auf Drucken klicken — Map · Check · Send öffnet sich automatisch zum Prüfen von Slots, Material und Purge.",
         "ui.guide.s2_title": "2. Slot-Bay, Auto-Feed, ACE-Schalter & Sperre",
@@ -14418,9 +14420,10 @@ ACE Status: — | Active Tool: — | Temp: —
 <!-- TAB 6: Guide / Help -->
 <div id="settingsPanel_guide" class="settings-panel" role="tabpanel">
 <div class="settings-section-card">
-<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">
-<span data-i18n="ui.guide.intro">Quick overview of Kobra-Van-Kenorca. Full guide with details on GitHub:</span>
-<a class="guide-link" href="https://github.com/Gwebster-r/Kobra-Van-Kenorca/blob/main/USER_GUIDE.md" target="_blank" rel="noopener noreferrer" data-i18n="ui.guide.github_link">Open full USER_GUIDE.md on GitHub</a>
+<div style="font-size:12px;color:var(--muted);margin-bottom:6px;" data-i18n="ui.guide.intro">Quick overview of Kobra-Van-Kenorca. Full guide on GitHub (copy link for your browser):</div>
+<div class="row" style="gap:6px;margin-bottom:10px;align-items:center;">
+<code id="guideGithubUrl" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;padding:4px 8px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface-sub);user-select:all;">https://github.com/Gwebster-r/Kobra-Van-Kenorca/blob/main/USER_GUIDE.md</code>
+<button type="button" id="btnCopyGuideUrl" onclick="copyGuideUrl()" data-i18n="ui.guide.btn_copy_url">Copy Link</button>
 </div>
 <div class="guide-acc">
 <details open><summary data-i18n="ui.guide.s1_title">1. Quick Start (3 Steps)</summary><p data-i18n="ui.guide.s1_body"></p></details>
@@ -15049,6 +15052,22 @@ if (navigator && navigator.clipboard && typeof navigator.clipboard.writeText ===
 navigator.clipboard.writeText(txt).catch(() => {});
 }
 logMsg(t("ui.settings.purge.llm_copied"));
+}
+
+function copyGuideUrl() {
+const urlEl = document.getElementById("guideGithubUrl");
+const url = (urlEl && urlEl.textContent) ? urlEl.textContent.trim() : "";
+if (!url) return;
+if (navigator && navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+navigator.clipboard.writeText(url).catch(() => {});
+}
+logMsg(t("ui.guide.copied"));
+const btn = document.getElementById("btnCopyGuideUrl");
+if (btn) {
+const orig = t("ui.guide.btn_copy_url");
+btn.textContent = "✓";
+setTimeout(() => { btn.textContent = orig; }, 1400);
+}
 }
 
 function getPrinterProfilesList() {
