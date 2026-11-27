@@ -1,0 +1,77 @@
+name: Publish to OrcaCloud
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  # Space-separated globs matching the plugin files to upload (.whl / .py with OS suffix).
+  PLUGIN_FILES: "dist/kobra_van_kenorca_any.py"
+  # Replace YOUR-PLUGIN-ID with the Release workflow URL from Orca Cloud -> Edit plugin -> GitHub publishing.
+  PUBLISH_URL: "https://api.orcaslicer.com/api/v1/plugin-publish/plugins/YOUR-PLUGIN-ID/releases"
+
+jobs:
+  publish:
+    # Skip GitHub pre-releases (e.g. dev/beta builds) and drafts so only stable releases publish to Orca Cloud.
+    if: ${{ !github.event.release.prerelease && !github.event.release.draft }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install GJS for UI tests
+        run: sudo apt-get update && sudo apt-get install -y gjs
+
+      - name: Run plugin checks before publishing
+        run: |
+          python3 -m unittest test_postprocess.py
+          size=$(stat -c %s kobra_van_kenorca_plugin.py)
+          echo "Plugin size: $size bytes"
+          test "$size" -lt 1000000
+          python3 -c 'import kobra_van_kenorca_plugin as p; assert set(p.TRANSLATIONS["en"]) == set(p.TRANSLATIONS["de"])'
+
+      - name: Prepare Orca Cloud upload file
+        run: |
+          mkdir -p dist
+          cp kobra_van_kenorca_plugin.py dist/kobra_van_kenorca_any.py
+
+      - name: Publish release to OrcaCloud
+        run: |
+          set -euo pipefail
+          if [[ "$PUBLISH_URL" == *"YOUR-PLUGIN-ID"* ]]; then
+            echo "Set PUBLISH_URL in .github/workflows/publish-orcacloud.yml first." >&2
+            exit 1
+          fi
+          oidc_token="$(curl -sS -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=orcacloud" | jq -r .value)"
+          version="${GITHUB_REF_NAME#v}"
+          changelog="$(jq -r '.release.body // ""' "$GITHUB_EVENT_PATH" | head -c 4000)"
+          metadata="$(jq -cn --arg version "$version" --arg changelog "$changelog" \
+            '{version: $version} + (if $changelog == "" then {} else {changelog: $changelog} end)')"
+          args=(-F "metadata=$metadata")
+          shopt -s nullglob
+          for file in $PLUGIN_FILES; do
+            args+=(-F "files=@$file")
+          done
+          if [ "${#args[@]}" -eq 1 ]; then
+            echo "No plugin files matched: $PLUGIN_FILES" >&2
+            exit 1
+          fi
+          status="$(curl -sS -o response.json -w '%{http_code}' \
+            -H "Authorization: Bearer $oidc_token" \
+            "${args[@]}" \
+            "$PUBLISH_URL")"
+          if [ "$status" != "201" ]; then
+            echo "Publish failed with HTTP $status" >&2
+            jq -c '.error // .' response.json >&2 || true
+            exit 1
+          fi
+          # Only print non-sensitive summary fields in public workflow logs.
+          jq -c --arg status "$status" '{status: $status, version, level: .security.level}' response.json
